@@ -14,7 +14,7 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
   const context = useBreedsContext();
 
   const swiper = useSwiper(breeds);
-  const debounceOnchange = useDebounceCallback(context.onChangeDirection, 500);
+  const debounceOnchange = useDebounceCallback(context.onChangeDirection, 400);
 
   const onChangeDirection = (direction: "left" | "right") => {
     swiper.handleSwipe();

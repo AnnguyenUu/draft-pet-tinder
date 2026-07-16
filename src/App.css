@@ -12,10 +12,10 @@
   margin-top: 48px;
 }
 
-@media (max-width: 640px) {
-  .page--immersive {
-    padding: 0;
-  }
+.page--immersive {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .hint {
@@ -101,23 +101,26 @@
   border-radius: 8px;
 }
 
-/* Breed catalog (swipeable) */
+/* Breed catalog (swipeable) — one layout at every screen size: full-viewport
+   card split into an 80% photo and a 20% info/action panel in normal
+   document flow below it. No separate "desktop card" treatment. */
 
 .breed-swiper {
-  max-width: min(380px, calc(100vw - 96px));
-  margin: 20px auto 0;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .breed-swiper__deck {
   position: relative;
-  aspect-ratio: 3 / 4;
+  width: 100%;
+  height: 100dvh;
   outline: none;
 }
 
 .breed-swiper__deck:focus-within {
   outline: 2px solid var(--accent);
-  outline-offset: 6px;
-  border-radius: 20px;
+  outline-offset: -2px;
 }
 
 .breed-swiper__card {
@@ -155,31 +158,33 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 24px;
   overflow: hidden;
   background: var(--code-bg);
-  box-shadow:
-    rgba(0, 0, 0, 0.18) 0 24px 40px -14px,
-    rgba(0, 0, 0, 0.08) 0 6px 12px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Desktop: media fills the whole card; the panel (name/meta/actions) is
-   absolutely pinned to the bottom, overlaid on the photo behind a scrim. */
 .breed-card__media {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 0 0 80%;
+  min-height: 0;
   display: block;
+  background: var(--code-bg);
   -webkit-user-drag: none;
   user-drag: none;
 }
 
+/* object-fit: contain, not cover — TheDogAPI's photos range from
+   near-square to genuinely landscape (some ~1.8:1). Cropping a wide photo
+   to fill the frame zooms into a narrow center strip of mostly torso, with
+   no head or legs for scale, which reads as "stretched" even though no
+   pixel is actually distorted. Showing the whole photo (letterboxed against
+   .breed-card__media's background where needed) is worth the tradeoff. */
 .breed-card__image {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  object-fit: contain;
   -webkit-user-drag: none;
   user-drag: none;
 }
@@ -188,17 +193,21 @@
   background: linear-gradient(135deg, var(--border), var(--code-bg));
 }
 
+/* Not used in the stacked layout — the name/meta panel sits below the
+   photo, not overlaid on top of it, so no scrim is needed for legibility. */
 .breed-card__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.8) 100%);
-  pointer-events: none;
+  display: none;
 }
 
 .breed-card__panel {
-  position: absolute;
-  inset: auto 0 0 0;
-  color: #fff;
+  position: static;
+  flex: 1 1 20%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text-h);
 }
 
 .breed-card__content {
@@ -240,7 +249,7 @@
   align-items: center;
   justify-content: center;
   gap: 26px;
-  padding: 8px 0 20px;
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
 }
 
 .breed-card__action {
@@ -251,8 +260,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: rgba(20, 20, 20, 0.35);
-  backdrop-filter: blur(6px);
   border: 1.5px solid currentColor;
   transition:
     transform 0.15s ease,
@@ -275,62 +282,6 @@
 
 .breed-card__action--like {
   color: #33cf76;
-}
-
-/* Mobile: full-screen card split into an 80% photo and a 20% info/action
-   panel in normal document flow below it, instead of overlaid on the photo. */
-@media (max-width: 640px) {
-  .breed-swiper {
-    max-width: none;
-    width: 100%;
-    margin: 0;
-  }
-
-  .breed-swiper__deck {
-    aspect-ratio: auto;
-    width: 100%;
-    height: 100dvh;
-  }
-
-  .breed-swiper__deck:focus-within {
-    border-radius: 0;
-  }
-
-  .breed-card {
-    display: flex;
-    flex-direction: column;
-    border-radius: 0;
-  }
-
-  .breed-card__media {
-    position: relative;
-    flex: 0 0 80%;
-    min-height: 0;
-    background: var(--code-bg);
-  }
-
-  .breed-card__image {
-    object-fit: contain;
-  }
-
-  .breed-card__scrim {
-    display: none;
-  }
-
-  .breed-card__panel {
-    position: static;
-    flex: 1 1 20%;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: var(--bg);
-    color: var(--text-h);
-  }
-
-  .breed-card__actions {
-    padding-bottom: max(8px, env(safe-area-inset-bottom));
-  }
 }
 
 /* Breed detail screen */
