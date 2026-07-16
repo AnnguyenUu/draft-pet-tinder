@@ -12,6 +12,12 @@
   margin-top: 48px;
 }
 
+@media (max-width: 640px) {
+  .page--immersive {
+    padding: 0;
+  }
+}
+
 .hint {
   color: var(--text);
   margin-top: 16px;
@@ -157,6 +163,13 @@
     rgba(0, 0, 0, 0.08) 0 6px 12px;
 }
 
+/* Desktop: media fills the whole card; the panel (name/meta/actions) is
+   absolutely pinned to the bottom, overlaid on the photo behind a scrim. */
+.breed-card__media {
+  position: absolute;
+  inset: 0;
+}
+
 .breed-card__image {
   position: absolute;
   inset: 0;
@@ -179,11 +192,14 @@
   pointer-events: none;
 }
 
-.breed-card__content {
+.breed-card__panel {
   position: absolute;
   inset: auto 0 0 0;
-  padding: 20px 20px 90px;
   color: #fff;
+}
+
+.breed-card__content {
+  padding: 20px 20px 8px;
 }
 
 .breed-card__title {
@@ -194,7 +210,7 @@
   font-size: 23px;
   font-weight: 600;
   letter-spacing: -0.2px;
-  color: #fff;
+  color: inherit;
 }
 
 .breed-card__verified {
@@ -207,18 +223,16 @@
   gap: 5px;
   margin: 0;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
+  color: inherit;
+  opacity: 0.85;
 }
 
 .breed-card__actions {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 26px;
+  padding: 8px 0 20px;
 }
 
 .breed-card__action {
@@ -253,6 +267,62 @@
 
 .breed-card__action--like {
   color: #33cf76;
+}
+
+/* Mobile: full-screen card split into an 80% photo and a 20% info/action
+   panel in normal document flow below it, instead of overlaid on the photo. */
+@media (max-width: 640px) {
+  .breed-swiper {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+  }
+
+  .breed-swiper__deck {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100dvh;
+  }
+
+  .breed-swiper__deck:focus-within {
+    border-radius: 0;
+  }
+
+  .breed-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+  }
+
+  .breed-card__media {
+    position: relative;
+    flex: 0 0 80%;
+    min-height: 0;
+    background: var(--code-bg);
+  }
+
+  .breed-card__image {
+    object-fit: contain;
+  }
+
+  .breed-card__scrim {
+    display: none;
+  }
+
+  .breed-card__panel {
+    position: static;
+    flex: 1 1 20%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text-h);
+  }
+
+  .breed-card__actions {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
 }
 
 /* Breed details dialog */
