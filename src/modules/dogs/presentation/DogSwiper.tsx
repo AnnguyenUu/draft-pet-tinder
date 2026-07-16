@@ -1,25 +1,38 @@
-
 import TinderCard from "react-tinder-card";
 import type { BreedDetails } from "@/types/dog";
 import { BreedCard } from "@/modules/dogs/presentation/BreedCard";
 import { SWIPE_THRESHOLD } from "../configuration/constants";
 import { useSwiper } from "../core/handlers/useSwiper";
+import { useBreedsContext } from "../core/store/store";
 
 interface DogSwiperProps {
   breeds: BreedDetails[];
 }
 
 export function DogSwiper({ breeds }: DogSwiperProps) {
+
+  const context = useBreedsContext();
+  
   const {
     index,
-    handleKeyDown,
+    atEnd,
+    current,
     windowed,
     activeCardRef,
+    handleKeyDown,
     handleSwipe,
     triggerSwipe,
-    atEnd,
-    current
-  } = useSwiper(breeds)
+  } = useSwiper(breeds);
+
+  const onChangeDirection = (direction: "left" | "right") => {
+    if ((direction === "left" || direction === "right") && current.imageId) {
+      context.vote.mutate({
+        imageId: current.imageId,
+        value: direction === "right" ? 1 : -1,
+      });
+    }
+    handleSwipe(direction);
+  };
 
   return (
     <div className="breed-swiper">
@@ -39,13 +52,17 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
             preventSwipe={["up", "down"]}
             swipeRequirementType="position"
             swipeThreshold={SWIPE_THRESHOLD}
-            onSwipe={i === 0 ? handleSwipe : undefined}
+            {...(i === 0 && {
+              onSwipe: onChangeDirection,
+            })}
           >
             <BreedCard
               breed={breed}
-              onPass={i === 0 ? () => triggerSwipe("left") : undefined}
-              onLike={i === 0 ? () => triggerSwipe("right") : undefined}
               disabled={atEnd}
+              {...(i === 0 && {
+                onPass: () => triggerSwipe("left"),
+                onLike: () => triggerSwipe("right"),
+              })}
             />
           </TinderCard>
         ))}

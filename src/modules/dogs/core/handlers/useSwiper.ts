@@ -2,16 +2,23 @@ import { useRef, useState } from "react";
 import type { TinderCardApi } from "../../domain/model";
 import type { BreedDetails } from "@/types/dog";
 import { WINDOW_AHEAD } from "../../configuration/constants";
+import { useVoteImage } from "./useVoteImage";
 
 export const useSwiper = (breeds: BreedDetails[]) => {
   const [index, setIndex] = useState(0);
+  
   const activeCardRef = useRef<TinderCardApi | null>(null);
+
+  const voteImage = useVoteImage();
 
   const current = breeds[index];
   const atEnd = index >= breeds.length - 1;
   const windowed = breeds.slice(index, index + 1 + WINDOW_AHEAD);
 
-  const handleSwipe = () => {
+  const handleSwipe = (direction: "left" | "right" | "up" | "down") => {
+    // if ((direction === "left" || direction === "right") && current.imageId) {
+    //   voteImage.mutate({ imageId: current.imageId, value: direction === "right" ? 1 : -1 });
+    // }
     setIndex((i) => Math.min(i + 1, breeds.length - 1));
   }
 

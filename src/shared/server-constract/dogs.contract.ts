@@ -19,7 +19,7 @@ export const breedSchema = z.object({
   history: z.string().nullable().optional(),
   weight: measurementSchema.optional(),
   height: measurementSchema.optional(),
-  image: z.object({ url: z.string().url() }).optional(),
+  image: z.object({ id: z.string(), url: z.string().url() }).optional(),
 });
 
 export const breedListResponseSchema = z.array(breedSchema);
@@ -30,5 +30,13 @@ export const breedImagesResponseSchema = z.object({
   status: z.literal("success"),
 });
 
+// Matches TheDogAPI's response shape for POST /v1/votes.
+export const voteResponseSchema = z.object({
+  id: z.union([z.string(), z.number()]),
+  image_id: z.string(),
+  value: z.number(),
+});
+
 export type BreedListResponse = z.infer<typeof breedListResponseSchema>;
 export type BreedImagesResponse = z.infer<typeof breedImagesResponseSchema>;
+export type VoteResponse = z.infer<typeof voteResponseSchema>;
