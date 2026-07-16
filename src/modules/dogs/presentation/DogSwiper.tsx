@@ -12,26 +12,12 @@ interface DogSwiperProps {
 export function DogSwiper({ breeds }: DogSwiperProps) {
 
   const context = useBreedsContext();
-  
-  const {
-    index,
-    atEnd,
-    current,
-    windowed,
-    activeCardRef,
-    handleKeyDown,
-    handleSwipe,
-    triggerSwipe,
-  } = useSwiper(breeds);
+
+  const swiper = useSwiper(breeds);
 
   const onChangeDirection = (direction: "left" | "right") => {
-    if ((direction === "left" || direction === "right") && current.imageId) {
-      context.vote.mutate({
-        imageId: current.imageId,
-        value: direction === "right" ? 1 : -1,
-      });
-    }
-    handleSwipe(direction);
+    context.onChangeDirection(direction, swiper?.current.imageId)
+    swiper.handleSwipe();
   };
 
   return (
@@ -41,13 +27,13 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
         tabIndex={0}
         role="group"
         aria-roledescription="carousel"
-        aria-label={`Dog breeds, showing ${index + 1} of ${breeds.length}: ${current.name}`}
-        onKeyDown={handleKeyDown}
+        aria-label={`Dog breeds, showing ${swiper?.index + 1} of ${breeds.length}: ${swiper?.current?.name}`}
+        onKeyDown={swiper?.handleKeyDown}
       >
-        {windowed.map((breed, i) => (
+        {(swiper?.windowed || []).map((breed, i) => (
           <TinderCard
             key={breed.id}
-            ref={i === 0 ? activeCardRef : undefined}
+            ref={i === 0 ? swiper?.activeCardRef : undefined}
             className={`breed-swiper__card ${i === 0 ? "breed-swiper__card--active" : "breed-swiper__card--hidden"}`}
             preventSwipe={["up", "down"]}
             swipeRequirementType="position"
@@ -58,10 +44,10 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
           >
             <BreedCard
               breed={breed}
-              disabled={atEnd}
+              disabled={swiper?.atEnd}
               {...(i === 0 && {
-                onPass: () => triggerSwipe("left"),
-                onLike: () => triggerSwipe("right"),
+                onPass: () => swiper?.triggerSwipe("left"),
+                onLike: () => swiper?.triggerSwipe("right"),
               })}
             />
           </TinderCard>
