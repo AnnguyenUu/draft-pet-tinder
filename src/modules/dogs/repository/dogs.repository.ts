@@ -1,9 +1,8 @@
 import { createRequest } from "@/shared/api/request-builder";
 import {
-  breedImagesResponseSchema,
   breedListResponseSchema,
 } from "@/shared/server-constract/dogs.contract";
-import type { Breed, BreedDetails } from "@/types/dog";
+import type { BreedDetails } from "@/types/dog";
 
 export async function fetchBreedList(): Promise<BreedDetails[]> {
   const data = await createRequest("/v1/breeds").withMethod("get").send();
@@ -24,10 +23,4 @@ export async function fetchBreedList(): Promise<BreedDetails[]> {
       imageUrl: breed.image?.url ?? null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-export async function fetchBreedImages(breed: string): Promise<Breed[]> {
-  const data = await createRequest(`/dogs/breeds/${breed}/images`).withMethod("get").send();
-  const parsed = breedImagesResponseSchema.parse(data);
-  return parsed.message.map((imageUrl) => ({ name: breed, imageUrl }));
 }

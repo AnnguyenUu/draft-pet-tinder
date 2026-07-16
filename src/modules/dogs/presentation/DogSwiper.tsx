@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import TinderCard from "react-tinder-card";
 import type { BreedDetails } from "@/types/dog";
 import { BreedCard } from "@/modules/dogs/presentation/BreedCard";
-import { LikeIcon, PassIcon } from "@/modules/dogs/presentation/icons";
 
 interface TinderCardApi {
   swipe(direction?: "left" | "right" | "up" | "down"): Promise<void>;
@@ -14,15 +13,6 @@ interface DogSwiperProps {
 }
 
 const SWIPE_THRESHOLD = 100;
-// Keep this many upcoming breeds pre-mounted (hidden, non-interactive)
-// behind the active card. react-tinder-card attaches its drag listeners in
-// a layout effect scoped to each mounted instance, so remounting a single
-// card via `key` on every swipe leaves a split-second gap where a new drag
-// can start after the old instance's listeners are torn down but before
-// the new one's are attached — the gesture just silently vanishes. Keeping
-// the next cards mounted (just invisible) the whole time means "advancing"
-// is only ever a class-name flip on an already-ready component, so that
-// gap never exists.
 const WINDOW_AHEAD = 2;
 
 export function DogSwiper({ breeds }: DogSwiperProps) {
@@ -67,29 +57,14 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
             swipeThreshold={SWIPE_THRESHOLD}
             onSwipe={i === 0 ? handleSwipe : undefined}
           >
-            <BreedCard breed={breed} />
+            <BreedCard
+              breed={breed}
+              onPass={i === 0 ? () => triggerSwipe("left") : undefined}
+              onLike={i === 0 ? () => triggerSwipe("right") : undefined}
+              disabled={atEnd}
+            />
           </TinderCard>
         ))}
-      </div>
-      <div className="breed-swiper__controls">
-        <button
-          type="button"
-          className="breed-swiper__action breed-swiper__action--pass"
-          onClick={() => triggerSwipe("left")}
-          disabled={atEnd}
-          aria-label={`Pass on ${current.name}`}
-        >
-          <PassIcon />
-        </button>
-        <button
-          type="button"
-          className="breed-swiper__action breed-swiper__action--like"
-          onClick={() => triggerSwipe("right")}
-          disabled={atEnd}
-          aria-label={`Like ${current.name}`}
-        >
-          <LikeIcon />
-        </button>
       </div>
     </div>
   );
