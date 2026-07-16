@@ -8,3 +8,5 @@ export const DOGS: string = "dogs";
 
 export const SWIPE_THRESHOLD = 100;
 export const WINDOW_AHEAD = 2;
+
+export const LAST_BREED_ID_STORAGE_KEY = "dog-finder:last-breed-id";
