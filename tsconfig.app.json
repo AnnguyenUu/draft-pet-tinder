@@ -25,8 +25,9 @@
     "paths": {
       "@/*": ["./src/*"],
       "@routes/*": ["./src/routes/*"],
-      "@packages/*": ["./packages/*"]
+      "@packages/*": ["./packages/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   },
-  "include": ["src", "packages/*/src"]
+  "include": ["src", "packages/*/src", "hooks"]
 }

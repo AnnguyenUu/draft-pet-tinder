@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         '@routes': fileURLToPath(new URL('./src/routes', import.meta.url)),
         '@packages': fileURLToPath(new URL('./packages', import.meta.url)),
+        '@hooks': fileURLToPath(new URL('./hooks', import.meta.url)),
         // Browser shim so `process` isn't a bare ReferenceError at runtime;
         // only the specific env var below is actually inlined into the bundle.
         process: 'process/browser',

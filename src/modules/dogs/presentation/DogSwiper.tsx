@@ -4,20 +4,22 @@ import { BreedCard } from "@/modules/dogs/presentation/BreedCard";
 import { SWIPE_THRESHOLD } from "../configuration/constants";
 import { useSwiper } from "../core/handlers/useSwiper";
 import { useBreedsContext } from "../core/store/dog.store";
+import { useDebounceCallback } from "@hooks/useDebounceCallback";
 
 interface DogSwiperProps {
   breeds: BreedDetails[];
 }
 
 export function DogSwiper({ breeds }: DogSwiperProps) {
-
   const context = useBreedsContext();
 
   const swiper = useSwiper(breeds);
+  const debounceOnchange = useDebounceCallback(context.onChangeDirection, 500);
 
   const onChangeDirection = (direction: "left" | "right") => {
-    context.onChangeDirection(direction, swiper?.current.imageId)
     swiper.handleSwipe();
+
+    debounceOnchange(direction, swiper?.current.imageId);
   };
 
   return (
