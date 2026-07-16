@@ -1,4 +1,4 @@
-import { BreedsProvider } from "../core/store/store";
+import { BreedsProvider } from "../core/store/dog.store";
 import BreedCatalog from "./BreedCatalog";
 
 export function DogFinderPage() {

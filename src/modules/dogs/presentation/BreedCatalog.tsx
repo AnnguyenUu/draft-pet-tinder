@@ -1,6 +1,6 @@
 import { DogSwiper } from "./DogSwiper";
 import { memo } from "react";
-import { useBreedsContext } from "../core/store/store";
+import { useBreedsContext } from "../core/store/dog.store";
 
 const LoadingBread = () => {
   return <p className="hint">Loading breeds…</p>;
