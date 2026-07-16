@@ -98,7 +98,7 @@
 /* Breed catalog (swipeable) */
 
 .breed-swiper {
-  max-width: 380px;
+  max-width: min(380px, calc(100vw - 96px));
   margin: 20px auto 0;
 }
 
@@ -108,7 +108,7 @@
   outline: none;
 }
 
-.breed-swiper__deck:focus-visible {
+.breed-swiper__deck:focus-within {
   outline: 2px solid var(--accent);
   outline-offset: 6px;
   border-radius: 20px;
@@ -119,30 +119,19 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.breed-swiper__card:active {
+  cursor: grabbing;
 }
 
 .breed-swiper__card .breed-card {
   width: 100%;
   height: 100%;
   aspect-ratio: auto;
-}
-
-.breed-swiper__card--behind {
-  transform: scale(0.94) translateY(14px);
-  z-index: 1;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.breed-swiper__card--active {
-  z-index: 2;
-  cursor: grab;
-  touch-action: pan-y;
-  user-select: none;
-}
-
-.breed-swiper__card--active:active {
-  cursor: grabbing;
 }
 
 .breed-swiper__controls {

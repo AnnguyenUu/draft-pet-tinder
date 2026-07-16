@@ -4,15 +4,15 @@ import type { BreedDetails } from "@/types/dog";
 import { BreedCard } from "@/modules/dogs/presentation/BreedCard";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/modules/dogs/presentation/icons";
 
-interface BreedSwiperProps {
+interface DogSwiperProps {
   breeds: BreedDetails[];
 }
 
-const SWIPE_THRESHOLD = 120;
+const SWIPE_THRESHOLD = 100;
 const EXIT_DISTANCE = 600;
-const EXIT_DURATION = 260;
+const EXIT_DURATION = 240;
 
-export function DogSwiper({ breeds }: BreedSwiperProps) {
+export function DogSwiper({ breeds }: DogSwiperProps) {
   const [index, setIndex] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -20,18 +20,9 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
   const startX = useRef(0);
 
   const current = breeds[index];
-  const upcoming = breeds[index + 1];
-
-  console.log({
-    current
-  })
-
-  function commitSwipe(direction: "left" | "right") {
-    if (isAnimating) return;
-
-    const canGoNext = direction === "right" && index < breeds.length - 1;
-    const canGoPrev = direction === "left" && index > 0;
-    if (!canGoNext && !canGoPrev) {
+  const atEnd = index >= breeds.length - 1;
+  function advance(direction: "left" | "right") {
+    if (isAnimating || atEnd) {
       setDragX(0);
       return;
     }
@@ -40,14 +31,14 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
     setIsDragging(false);
     setDragX(direction === "right" ? EXIT_DISTANCE : -EXIT_DISTANCE);
     window.setTimeout(() => {
-      setIndex((i) => (direction === "right" ? i + 1 : i - 1));
+      setIndex((i) => Math.min(i + 1, breeds.length - 1));
       setDragX(0);
       setIsAnimating(false);
     }, EXIT_DURATION);
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (isAnimating) return;
+    if (isAnimating || atEnd) return;
     startX.current = event.clientX;
     setIsDragging(true);
 
@@ -61,8 +52,7 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
       setIsDragging(false);
 
       const dx = upEvent.clientX - startX.current;
-      if (dx > SWIPE_THRESHOLD) commitSwipe("right");
-      else if (dx < -SWIPE_THRESHOLD) commitSwipe("left");
+      if (Math.abs(dx) > SWIPE_THRESHOLD) advance(dx > 0 ? "right" : "left");
       else setDragX(0);
     };
 
@@ -71,8 +61,8 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "ArrowRight") commitSwipe("right");
-    if (event.key === "ArrowLeft") commitSwipe("left");
+    if (event.key === "ArrowRight") advance("right");
+    if (event.key === "ArrowLeft") advance("left");
   }
 
   const rotation = Math.max(-15, Math.min(15, dragX / 18));
@@ -87,13 +77,8 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
         aria-label={`Dog breeds, showing ${index + 1} of ${breeds.length}: ${current.name}`}
         onKeyDown={handleKeyDown}
       >
-        {upcoming && (
-          <div className="breed-swiper__card breed-swiper__card--behind">
-            <BreedCard breed={upcoming} />
-          </div>
-        )}
         <div
-          className="breed-swiper__card breed-swiper__card--active"
+          className="breed-swiper__card"
           style={{
             transform: `translateX(${dragX}px) rotate(${rotation}deg)`,
             transition: isDragging ? "none" : `transform ${EXIT_DURATION}ms cubic-bezier(.2,.8,.2,1)`,
@@ -108,9 +93,9 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
         <button
           type="button"
           className="breed-swiper__nav"
-          onClick={() => commitSwipe("left")}
-          disabled={isAnimating || index === 0}
-          aria-label="Previous breed"
+          onClick={() => advance("left")}
+          disabled={isAnimating || atEnd}
+          aria-label="Skip breed (swipe left)"
         >
           <ChevronLeftIcon />
         </button>
@@ -120,9 +105,9 @@ export function DogSwiper({ breeds }: BreedSwiperProps) {
         <button
           type="button"
           className="breed-swiper__nav"
-          onClick={() => commitSwipe("right")}
-          disabled={isAnimating || index === breeds.length - 1}
-          aria-label="Next breed"
+          onClick={() => advance("right")}
+          disabled={isAnimating || atEnd}
+          aria-label="Next breed (swipe right)"
         >
           <ChevronRightIcon />
         </button>
