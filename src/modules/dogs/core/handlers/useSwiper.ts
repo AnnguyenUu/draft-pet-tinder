@@ -4,7 +4,7 @@ import type { BreedDetails } from "@/types/dog";
 import { LAST_BREED_ID_STORAGE_KEY, WINDOW_AHEAD } from "../../configuration/constants";
 import { useLocalStorage } from "@packages/react-kit/src/useLocalStorage";
 
-function getInitialIndex(breeds: BreedDetails[], lastId: string | null): number {
+export function getInitialIndex(breeds: BreedDetails[], lastId: string | null): number {
   if (!lastId) return 0;
 
   const lastIndex = breeds.findIndex((breed) => breed.id === lastId);

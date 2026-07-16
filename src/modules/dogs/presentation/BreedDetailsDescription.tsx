@@ -1,5 +1,5 @@
-import type { BreedDetails } from "@/types/dog"
-import { memo } from "react"
+import type { BreedDetails } from "@/types/dog";
+import { memo, type ReactNode } from "react";
 import { LikeIcon, PassIcon } from "./icons";
 import { BreadAction, type BreadBulkAction } from "../domain/model";
 
@@ -7,60 +7,80 @@ const FALLBACK = "—";
 
 const BreedDetailsDescription = ({
   breed,
-  handleVote
+  handleVote,
 }: {
-  breed: BreedDetails
-  handleVote: (value: BreadBulkAction) => void
+  breed: BreedDetails;
+  handleVote: (value: BreadBulkAction) => void;
 }) => {
-  return  <>
-  <dl className="breed-detail__fields">
-    <div className="breed-detail__field">
-      <dt>Breed Name</dt>
-      <dd>{breed.name || FALLBACK}</dd>
-    </div>
-    <div className="breed-detail__field">
-      <dt>Bred For</dt>
-      <dd>{breed.bredFor || FALLBACK}</dd>
-    </div>
-    <div className="breed-detail__field">
-      <dt>Weight & Height</dt>
-      <dd>
-        {breed.weight?.metric ?? FALLBACK} kg - {breed.height?.metric ?? FALLBACK} cm
-      </dd>
-    </div>
-    <div className="breed-detail__field">
-      <dt>Breed Group</dt>
-      <dd>{breed.breedGroup || FALLBACK}</dd>
-    </div>
-    <div className="breed-detail__field">
-      <dt>Temperament</dt>
-      <dd>{breed.temperament.length > 0 ? breed.temperament.join(", ") : FALLBACK}</dd>
-    </div>
-    <div className="breed-detail__field">
-      <dt>Life Span</dt>
-      <dd>{breed.lifeSpan || FALLBACK}</dd>
-    </div>
-  </dl>
+  const items = [
+    {
+      label: "Breed Name",
+      value: breed?.name || FALLBACK,
+    },
+    {
+      label: "Bred For",
+      value: breed?.bredFor || FALLBACK,
+    },
+    {
+      label: "Weight & Height",
+      value: `${breed?.weight?.metric ?? FALLBACK} kg -
+            ${breed?.height?.metric ?? FALLBACK} cm`,
+    },
+    {
+      label: "Breed Group",
+      value: breed?.breedGroup || FALLBACK,
+    },
+    {
+      label: "Temperament",
+      value:
+        breed?.temperament?.length > 0
+          ? breed.temperament.join(", ")
+          : FALLBACK,
+    },
+    {
+      label: "Life Span",
+      value: breed.lifeSpan || FALLBACK,
+    },
+  ];
+  return (
+    <>
+      <List items={items} />
 
-  <div className="breed-detail__actions">
-    <button
-      type="button"
-      className="breed-card__action breed-card__action--pass"
-      onClick={() => handleVote(BreadAction.Dislike)}
-      aria-label={`Dislike ${breed.name}`}
-    >
-      <PassIcon />
-    </button>
-    <button
-      type="button"
-      className="breed-card__action breed-card__action--like"
-      onClick={() => handleVote(BreadAction.Like)}
-      aria-label={`Like ${breed.name}`}
-    >
-      <LikeIcon />
-    </button>
-  </div>
-</>
-}
+      <div className="breed-detail__actions">
+        <button
+          type="button"
+          className="breed-card__action breed-card__action--pass"
+          onClick={() => handleVote(BreadAction.Dislike)}
+          aria-label={`Dislike ${breed.name}`}
+        >
+          <PassIcon />
+        </button>
+        <button
+          type="button"
+          className="breed-card__action breed-card__action--like"
+          onClick={() => handleVote(BreadAction.Like)}
+          aria-label={`Like ${breed.name}`}
+        >
+          <LikeIcon />
+        </button>
+      </div>
+    </>
+  );
+};
 
-export default memo(BreedDetailsDescription)
+const List = ({ items }: { items: { label: string; value: ReactNode }[] }) => {
+  return (
+    <dl className="breed-detail__fields">
+      {(items || []).map((item) => {
+        return (
+          <div key={item?.label} className="breed-detail__field">
+            <dt>{item?.label}</dt>
+            <dd>{item?.value}</dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+};
+
+export default memo(BreedDetailsDescription);
