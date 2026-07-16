@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import type { BreedDetails } from "@/types/dog";
 import { BadgeCheckIcon, LikeIcon, PassIcon, PinIcon } from "@/modules/dogs/presentation/icons";
 
@@ -11,7 +13,7 @@ interface BreedCardProps {
 export function BreedCard({ breed, onPass, onLike, disabled }: BreedCardProps) {
   return (
     <article className="breed-card">
-      <div className="breed-card__media">
+      <Link to={`/breads/${breed.id}`} className="breed-card__media" draggable={false} aria-label={`More about ${breed.name}`}>
         {breed.imageUrl ? (
           <img
             src={breed.imageUrl}
@@ -24,10 +26,15 @@ export function BreedCard({ breed, onPass, onLike, disabled }: BreedCardProps) {
           <div className="breed-card__image breed-card__image--placeholder" aria-hidden="true" />
         )}
         <div className="breed-card__scrim" />
-      </div>
+      </Link>
 
       <div className="breed-card__panel">
-        <div className="breed-card__content">
+        <Link
+          to={`/breads/${breed.id}`}
+          className="breed-card__content"
+          draggable={false}
+          aria-label={`More about ${breed.name}`}
+        >
           <h3 className="breed-card__title">
             {breed.name}
             {breed.breedGroup && (
@@ -43,7 +50,7 @@ export function BreedCard({ breed, onPass, onLike, disabled }: BreedCardProps) {
               {breed.origin}
             </p>
           )}
-        </div>
+        </Link>
 
         {(onPass || onLike) && (
           <div className="breed-card__actions">

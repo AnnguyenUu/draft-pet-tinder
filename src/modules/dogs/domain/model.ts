@@ -8,3 +8,10 @@ export interface TinderCardApi {
 export interface DogSwiperProps {
   breeds: BreedDetails[];
 }
+
+export type BreadBulkAction = 1 | -1
+
+export const BreadAction = {
+  Like: 1,
+  Dislike: -1
+} as const
