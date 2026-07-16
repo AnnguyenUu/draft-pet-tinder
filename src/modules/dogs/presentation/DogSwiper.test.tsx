@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
@@ -82,8 +82,13 @@ describe("DogSwiper", () => {
 
     await user.click(screen.getByRole("button", { name: "Like Affenpinscher" }));
 
-    expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img");
+    // The deck itself advances immediately; reporting the direction to the
+    // store is debounced (see DogSwiper's `useDebounceCallback`), so it
+    // lands slightly after the click.
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
+    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img"), {
+      timeout: 1000,
+    });
   });
 
   it("advances and reports a left swipe when Pass is clicked", async () => {
@@ -92,8 +97,10 @@ describe("DogSwiper", () => {
 
     await user.click(screen.getByRole("button", { name: "Pass on Affenpinscher" }));
 
-    expect(onChangeDirection).toHaveBeenCalledWith("left", "1-img");
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
+    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("left", "1-img"), {
+      timeout: 1000,
+    });
   });
 
   it("advances via the ArrowRight key", async () => {
@@ -103,8 +110,10 @@ describe("DogSwiper", () => {
     screen.getByRole("group").focus();
     await user.keyboard("{ArrowRight}");
 
-    expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img");
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
+    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img"), {
+      timeout: 1000,
+    });
   });
 
   it("exposes an accessible label describing progress through the list", () => {
