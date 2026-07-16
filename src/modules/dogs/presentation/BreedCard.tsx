@@ -11,19 +11,21 @@ export function BreedCard({ breed }: BreedCardProps) {
 
   return (
     <article className="breed-card">
-      {breed.imageUrl ? (
-        <img
-          src={breed.imageUrl}
-          alt={breed.name}
-          className="breed-card__image"
-          loading="lazy"
-        />
-      ) : (
-        <div className="breed-card__image breed-card__image--placeholder" aria-hidden="true" />
-      )}
-      <div className="breed-card__scrim" />
+      <div className="breed-card__media">
+        {breed.imageUrl ? (
+          <img
+            src={breed.imageUrl}
+            alt={breed.name}
+            className="breed-card__image"
+            loading="lazy"
+            draggable={false}
+          />
+        ) : (
+          <div className="breed-card__image breed-card__image--placeholder" aria-hidden="true" />
+        )}
+      </div>
 
-      <div className="breed-card__content">
+      <div className="breed-card__panel">
         <h3 className="breed-card__title">
           {breed.name}
           {breed.breedGroup && (
@@ -32,6 +34,13 @@ export function BreedCard({ breed }: BreedCardProps) {
             </span>
           )}
         </h3>
+
+        {breed.origin && (
+          <p className="breed-card__meta">
+            <PinIcon />
+            {breed.origin}
+          </p>
+        )}
 
         {tags.length > 0 && (
           <ul className="breed-card__tags">
@@ -42,15 +51,6 @@ export function BreedCard({ breed }: BreedCardProps) {
             ))}
           </ul>
         )}
-
-        {breed.origin && (
-          <p className="breed-card__meta">
-            <PinIcon />
-            {breed.origin}
-          </p>
-        )}
-
-        {breed.description && <p className="breed-card__description">{breed.description}</p>}
       </div>
 
       {/* <BreedDetailsDialog breed={breed}>

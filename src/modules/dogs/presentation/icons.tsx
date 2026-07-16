@@ -77,3 +77,24 @@ export function CloseIcon() {
     </svg>
   );
 }
+
+export function PassIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+      <path
+        d="m6 6 12 12M18 6 6 18"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function LikeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+      <path d="M12 20.6s-7.6-4.8-9.9-9.6C.5 7.4 2.3 4 5.9 4c2.1 0 3.9 1.2 6.1 3.5C14.2 5.2 16 4 18.1 4c3.6 0 5.4 3.4 3.8 7-2.3 4.8-9.9 9.6-9.9 9.6Z" />
+    </svg>
+  );
+}
