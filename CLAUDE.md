@@ -54,7 +54,7 @@ This app has no backend of its own yet. `vite.config.ts` proxies `/api/dogs/*` t
 
 ### Path aliases
 
-`@/*` maps to `src/*`, `@routes/*` maps to `src/routes/*` (configured in both `tsconfig.app.json` `paths` and `vite.config.ts` `resolve.alias` — keep both in sync if either changes).
+`@/*` maps to `src/*`, `@routes/*` maps to `src/routes/*`, `@packages/*` maps to `packages/*` (each package's own `src/` stays part of the import path, e.g. `@packages/react-kit/src/context`). Configured in both `tsconfig.app.json` `paths` and `vite.config.ts` `resolve.alias` — keep both in sync if either changes.
 
 ## Adding a new feature module
 
