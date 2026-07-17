@@ -86,9 +86,12 @@ describe("DogSwiper", () => {
     // store is debounced (see DogSwiper's `useDebounceCallback`), so it
     // lands slightly after the click.
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
-    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img"), {
-      timeout: 1000,
-    });
+    await waitFor(
+      () => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img", "Affenpinscher"),
+      {
+        timeout: 1000,
+      },
+    );
   });
 
   it("advances and reports a left swipe when Pass is clicked", async () => {
@@ -98,9 +101,12 @@ describe("DogSwiper", () => {
     await user.click(screen.getByRole("button", { name: "Pass on Affenpinscher" }));
 
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
-    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("left", "1-img"), {
-      timeout: 1000,
-    });
+    await waitFor(
+      () => expect(onChangeDirection).toHaveBeenCalledWith("left", "1-img", "Affenpinscher"),
+      {
+        timeout: 1000,
+      },
+    );
   });
 
   it("advances via the ArrowRight key", async () => {
@@ -111,9 +117,12 @@ describe("DogSwiper", () => {
     await user.keyboard("{ArrowRight}");
 
     expect(screen.getByText("Afghan Hound")).toBeInTheDocument();
-    await waitFor(() => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img"), {
-      timeout: 1000,
-    });
+    await waitFor(
+      () => expect(onChangeDirection).toHaveBeenCalledWith("right", "1-img", "Affenpinscher"),
+      {
+        timeout: 1000,
+      },
+    );
   });
 
   it("exposes an accessible label describing progress through the list", () => {

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { TinderCardApi } from "../../domain/model";
+import { SwipeDirectionMapping, type SwipeDirection, type TinderCardApi } from "../../domain/model";
 import type { BreedDetails } from "@/types/dog";
 import { LAST_BREED_ID_STORAGE_KEY, WINDOW_AHEAD } from "../../configuration/constants";
 import { useLocalStorage } from "@packages/react-kit/src/useLocalStorage";
@@ -33,14 +33,14 @@ export const useSwiper = (breeds: BreedDetails[]) => {
     setIndex((i) => Math.min(i + 1, breeds.length - 1));
   }
 
-  const triggerSwipe = (direction: "left" | "right") => {
+  const triggerSwipe = (direction: SwipeDirection) => {
     if (atEnd) return;
     activeCardRef.current?.swipe(direction);
   }
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "ArrowRight") triggerSwipe("right");
-    if (event.key === "ArrowLeft") triggerSwipe("left");
+    if (event.key === "ArrowRight") triggerSwipe(SwipeDirectionMapping.RIGHT);
+    if (event.key === "ArrowLeft") triggerSwipe(SwipeDirectionMapping.LEFT);
   }
 
   return {

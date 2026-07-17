@@ -4,18 +4,18 @@ import { SWIPE_THRESHOLD } from "../configuration/constants";
 import { useSwiper } from "../core/handlers/useSwiper";
 import { useBreedsContext } from "../core/store/dog.store";
 import { useDebounceCallback } from "@hooks/useDebounceCallback";
-import type { DogSwiperProps } from "../domain/model";
+import { SwipeDirectionMapping, type DogSwiperProps, type SwipeDirection } from "../domain/model";
 
 export function DogSwiper({ breeds }: DogSwiperProps) {
   const context = useBreedsContext();
 
   const swiper = useSwiper(breeds);
-  const debounceOnchange = useDebounceCallback(context.onChangeDirection, 400);
+  const debounceOnchange = useDebounceCallback(context.onChangeDirection, 200);
 
-  const onChangeDirection = (direction: "left" | "right") => {
+  const onChangeDirection = (direction: SwipeDirection) => {
     swiper.handleSwipe();
 
-    debounceOnchange(direction, swiper?.current.imageId);
+    debounceOnchange(direction, swiper?.current.imageId, swiper?.current.name);
   };
 
   return (
@@ -44,8 +44,8 @@ export function DogSwiper({ breeds }: DogSwiperProps) {
               breed={breed}
               disabled={swiper?.atEnd}
               {...(i === 0 && {
-                onPass: () => swiper?.triggerSwipe("left"),
-                onLike: () => swiper?.triggerSwipe("right"),
+                onPass: () => swiper?.triggerSwipe(SwipeDirectionMapping.LEFT),
+                onLike: () => swiper?.triggerSwipe(SwipeDirectionMapping.RIGHT),
               })}
             />
           </TinderCard>
