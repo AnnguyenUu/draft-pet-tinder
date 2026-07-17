@@ -1,14 +1,10 @@
 import TinderCard from "react-tinder-card";
-import type { BreedDetails } from "@/types/dog";
 import { BreedCard } from "@/modules/dogs/presentation/BreedCard";
 import { SWIPE_THRESHOLD } from "../configuration/constants";
 import { useSwiper } from "../core/handlers/useSwiper";
 import { useBreedsContext } from "../core/store/dog.store";
 import { useDebounceCallback } from "@hooks/useDebounceCallback";
-
-interface DogSwiperProps {
-  breeds: BreedDetails[];
-}
+import type { DogSwiperProps } from "../domain/model";
 
 export function DogSwiper({ breeds }: DogSwiperProps) {
   const context = useBreedsContext();
