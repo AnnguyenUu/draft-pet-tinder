@@ -24,8 +24,10 @@
 
     "paths": {
       "@/*": ["./src/*"],
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*"],
+      "@packages/*": ["./packages/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "packages/*/src", "hooks"]
 }

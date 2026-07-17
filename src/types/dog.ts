@@ -16,4 +16,5 @@ export interface BreedDetails {
   weight: { imperial: string; metric: string } | null;
   height: { imperial: string; metric: string } | null;
   imageUrl: string | null;
+  imageId: string | null;
 }

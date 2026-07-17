@@ -1,6 +1,6 @@
-import { useBreedList } from "@/modules/dogs/core/handlers/useBreedList";
 import { DogSwiper } from "./DogSwiper";
 import { memo } from "react";
+import { useBreedsContext } from "../core/store/dog.store";
 
 const LoadingBread = () => {
   return <p className="hint">Loading breeds…</p>;
@@ -11,7 +11,12 @@ const ErrorBread = () => {
 };
 
 function BreedCatalog() {
-  const { data: breeds, isLoading, isError } = useBreedList();
+
+  const context = useBreedsContext()
+
+  const query = context.query
+
+  const { data: breeds, isLoading, isError } = query
 
   if (isLoading) return <LoadingBread />;
 
